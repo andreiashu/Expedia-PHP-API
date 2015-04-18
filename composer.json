@@ -1,0 +1,20 @@
+{
+  "name": "andreiashu/Expedia-PHP-API",
+  "description": "Fork of https://github.com/dyatlov/Expedia-PHP-API (thanks dyatlov)",
+  "keywords": ["expedia", "ean", "hotels"],
+  "homepage": "https://github.com/andreiashu/Expedia-PHP-API",
+  "license": "MIT",
+  "authors": [
+
+    {
+      "name": "Vitaly Dyatlov",
+      "email": " md.xytop@gmail.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "autoload": {
+    "psr-4": {"Dyatlov\\Expedia": "Dyatlov/Expedia"}
+  }
+}
