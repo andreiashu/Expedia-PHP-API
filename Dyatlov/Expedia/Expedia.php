@@ -264,8 +264,6 @@ class Expedia {
       'customerUserAgent'        => $this->get_customer_user_agent(),
       'currencyCode'             => $this->get_currency_code(),
       'apiExperience'            => 'PARTNER_WEBSITE',
-      'includeDetails'           => 1,
-      'includeHotelFeeBreakdown' => 1,
     );
   }
 

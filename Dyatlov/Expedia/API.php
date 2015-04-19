@@ -44,6 +44,20 @@ class API extends Expedia {
     return $result;
   }
 
+  /**
+   * @see http://developer.ean.com/docs/geo-functions/examples/rest-location-search/
+   *
+   * @param $params
+   * @return mixed
+   */
+  public function getDestinationId($params) {
+    $result = $this->geoSearch($params);
+
+    $this->checkForEanError($result);
+
+    return $result['LocationInfos']['LocationInfo']['destinationId'];
+  }
+
   public function getHotelList($params) {
     $result = array();
 
