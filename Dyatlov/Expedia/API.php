@@ -9,89 +9,84 @@ namespace Dyatlov\Expedia;
 require_once dirname(__FILE__) . '/Expedia.php';
 require_once dirname(__FILE__) . '/Exception.php';
 
-class API extends Expedia
-{
-    protected $_totalHotels = 0;
-    protected $_availableHotels = 0;
+class API extends Expedia {
+  protected $_totalHotels = 0;
+  protected $_availableHotels = 0;
 
-    public function getTotalHotels()
-    {
-        return $this->_totalHotels;
-    }
+  public function getTotalHotels() {
+    return $this->_totalHotels;
+  }
 
-    public function getAvailableHotels()
-    {
-        return $this->_availableHotels;
-    }
+  public function getAvailableHotels() {
+    return $this->_availableHotels;
+  }
 
-    public function getPaymentOptions($currencyCode, $locale)
-    {
-        $result = $this->paymentInfo(array(
-            'currencyCode' => $currencyCode,
-            'locale' => $locale
-        ));
+  public function getPaymentOptions($currencyCode, $locale) {
+    $result = $this->paymentInfo(array(
+      'currencyCode' => $currencyCode,
+      'locale'       => $locale
+    ));
 
-        return $result;
-    }
+    return $result;
+  }
 
-    public function getHotelInfo($hotelId)
-    {
-        $result = $this->info(array(
-            'hotelId' => $hotelId
-        ));
+  public function getHotelInfo($hotelId) {
+    $result = $this->info(array(
+      'hotelId' => $hotelId
+    ));
 
-        return $result;
-    }
+    return $result;
+  }
 
-    public function getAvailableRooms($params)
-    {
-        $result = $this->avail($params);
+  public function getAvailableRooms($params) {
+    $result = $this->avail($params);
 
-        return $result;
-    }
+    return $result;
+  }
 
-    public function getHotelList($params)
-    {
-        $result = array();
+  public function getHotelList($params) {
+    $result = array();
 
-        try {
-            $hotels = $this->list($params);
+    try {
+      $hotels = $this->list($params);
 
-            if ($hotels != null && isset($hotels['HotelList'])) {
-                $this->_totalHotels = $hotels['HotelList']['@activePropertyCount'];
-            }
+      if ($hotels != NULL && isset($hotels['HotelList'])) {
+        $this->_totalHotels = $hotels['HotelList']['@activePropertyCount'];
+      }
 
-            while ($hotels != null) {
-                if (isset($hotels['HotelList'])) {
-                    if ($hotels['HotelList']['@size'] > 1) {
-                        $result = array_merge($result, $hotels['HotelList']['HotelSummary']);
-                    } else {
-                        $result = array_merge($result, array($hotels['HotelList']['HotelSummary']));
-                    }
-                }
-
-                if (!$hotels['moreResultsAvailable']) {
-                    break;
-                }
-
-                if (isset($params['numberOfResults']) && count($result) <= intval($params['numberOfResults'])) {
-                    break;
-                }
-
-                $hotels = $this->list(array(
-                    'cacheKey' => $hotels['cacheKey'],
-                    'cacheLocation' => $hotels['cacheLocation']
-                ));
-            }
-        } catch (Exception $ex) {
-            $data = $ex->getData();
-            if ($data['category'] != 'RESULT_NULL') {
-                throw new Exception($data);
-            }
+      while ($hotels != NULL) {
+        if (isset($hotels['HotelList'])) {
+          if ($hotels['HotelList']['@size'] > 1) {
+            $result = array_merge($result, $hotels['HotelList']['HotelSummary']);
+          }
+          else {
+            $result = array_merge($result, array($hotels['HotelList']['HotelSummary']));
+          }
         }
 
-        $this->_availableHotels = count($result);
+        if (!$hotels['moreResultsAvailable']) {
+          break;
+        }
 
-        return $result;
+        if (isset($params['numberOfResults']) && count($result) <= intval($params['numberOfResults'])) {
+          break;
+        }
+
+        $hotels = $this->list(array(
+          'cacheKey'      => $hotels['cacheKey'],
+          'cacheLocation' => $hotels['cacheLocation']
+        ));
+      }
     }
+    catch (Exception $ex) {
+      $data = $ex->getData();
+      if ($data['category'] != 'RESULT_NULL') {
+        throw new Exception($data);
+      }
+    }
+
+    $this->_availableHotels = count($result);
+
+    return $result;
+  }
 }
